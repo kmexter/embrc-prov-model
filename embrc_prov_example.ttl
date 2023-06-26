@@ -1,0 +1,327 @@
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix schema: <http://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/#> .
+@prefix sosa: <http://www.w3.org/ns/ssn/#> .
+@prefix dwc: <	http://rs.tdwg.org/dwc/terms/#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+#### ACTIVITIES ####
+## A TRANSPORT ACTIVITY
+<http://example.org/Transport/transportExample>
+    a prov:Activity ; 
+    dct:type "Transport" ; 
+    
+    prov:used [
+    	a prov:Entity ; 
+    	dct:title "Storage conditions of the transport activity" ; 
+    	dct:description {A description of the storage conditions} ; 
+    	] ;     
+    prov:used <http://example.org/Permit/2> ; 
+    
+    prov:startedAtTime {datetime} ; 
+    prov:endedAtTime {datetime} ; 
+
+    prov:wasAssociatedWith <http://example.org/Person/1> ; 
+
+    prov:used <http://example.org/Protocol/1> ; 
+.
+
+## A PROCESSING ACTIVITY
+<http://example.org/Storage/storageExample1>
+    a prov:Activity ; 
+    dct:type "Processing" ; 
+    
+    prov:used [
+    	a prov:Entity ; 
+    	dct:title "Materials/Chemicals used during the processing activity" ; 
+    	dct:desciption {description of the materials/chemicals used} ; 
+    ] ; 
+    prov:used <http://example.org/Instrument/1> ; 
+    
+    prov:atLocation <http://example.org/location-type2> ; 
+    
+    prov:startedAtTime {datetime} ; 
+    prov:endedAtTime {datetime} ; 
+
+    prov:wasAssociatedWith <http://example.org/Person/2> ; 
+
+    prov:used <http://example.org/Protocol/...> ; 
+.
+
+
+## A STORAGE ACTIVITY
+<http://example.org/Storage/storageExample2>
+    a prov:Activity ; 
+    dct:type "Storage" ; 
+    
+    prov:atLocation <http://example.org/location-type1> ; 
+    
+    #Case of Bio-banking --> Agent associated with this activity is the bio-banking facility
+    prov:wasAssociatedWith <http://example.org/BiobankInstitute> ; 
+    
+    prov:startedAtTime {datetime} ; 
+    prov:endedAtTime {datetime} ; 
+    
+    prov:used [
+        a prov:Entity ; 
+        dct:title "Storage conditions during the storage activity" ; 
+        dct:description {a short description of the storage conditions} ;  
+    ] ; 
+    prov:used <http://example.org/StorageDevice/1> ; 
+.
+
+
+## AN ORDERING ACTIVITY
+<http://example.org/Order/1>
+    a prov:Activity ;
+    dct:type "Ordering - {to specify the kind of ordering}" ; 
+    
+    #bio-bank name can go into the description of the agent, a bit unclear in the UML diagram
+    prov:wasAssociatedWith <http://example.org/BioBank/instituteName> ;  
+    
+    prov:startedAtTime {datetime} ; 
+    prov:endedAtTime {datetime} ; 
+    
+    #location doesn't make sense to have here
+.
+
+
+## SAMPLING ACTIVITY
+<http://example.org/Sampling/1>
+    a ssn:Sampling, prov:Activity;
+    dct:type "Sampling" ; 
+    
+    prov:used <http://example.org/Sampler/a> ;
+    #or alternatively
+    sosa:madebySampler <http://example.org/Sampler/a> ;
+     
+    prov:used <http://example.org/Permit/1> ; 
+
+    prov:atLocation <http://example.org/location-type1>,  <http://example.org/location-type2>, <http://example.org/location-type3> ; 
+    
+    prov:startedAtTime {datetime} ;
+    prov:endedAtTime {datetime} ;
+
+    prov:wasAssociatedWith <http://example.org/person/examplePerson> ; 
+
+    prov:used <http://example.org/SamplingProtocol/1> ; 
+.
+
+
+## QUALITY CONTROL ACTIVITY
+<http://example.org/QualityControl/qualitycontrolExample>
+    a prov:Activity ; 
+    dct:type "Quality Control activity" ; 
+    
+    dct:description {the scope of the quality control} ; 
+    prov:used <http://example.org/SoftWareProcessing/2> ; 
+.
+
+
+## SOFTWARE PROCESSING ACTIVITY
+<http://example.org/SoftwareProcessingActivity/1>
+    a prov:Activity ; 
+    dct:type "Software Processing activity" ;
+     
+    prov:used <http://example.org/SoftwareProcessing/1> ; 
+.
+
+## DATA RETRIEVAL ACTIVITY
+<http://example.org/DataRetrieval/1>
+    a prov:Activity ; 
+    dct:type "Data retrieval" ; 
+
+    #need definitions of properties in the UML diagram; e.g. what does 'role' entail?
+    prov:used [
+        a prov:Entity ; 
+        dct:title "The metadata associated with data retrieval" ; 
+        schema:url <...> ; 
+    ] ; 
+    prov:used [
+        a prov:Entity ; 
+        dct:title "The data associated with data retrieval" ; 
+        schema:url <...> ; 
+    ] ; 
+.
+    
+
+#### LOCATION ####
+<http://example.org/location-type1>
+    a prov:Location, schema:PostalAddress; 
+        
+    schema:addressCountry {} ; 
+    schema:postalCode {} ; 
+    schema:streetAddress {} ; 
+.
+
+<http://example.org/location-type2>
+    a prov:Location, schema:Place ;
+     
+    schema:name {ISO country name} ; 
+    schema:latitude {} ;
+    schema:longitude {} ; 
+    owl:sameAs {MRGID url} ;  
+.
+
+<http://example.org/location-type3>
+    a prov:Location, dct:Location ;  
+    
+    locn:geometry {geometry could be encoded as WKT (geosparql:asWKT)} ; 
+    dcat:bbox {} ; 
+    dcat:centroid {} ;     
+.
+
+
+#### AGENT ####
+<http://example.org/Person/1>
+        a prov:Person, schema:Person ; 
+
+        schema:giveName {} ;
+        schema:surName {} ; 
+        schema:email {} ; 
+        owl:sameAs {orcID} ; #Katrina will dig through homework to check how orcID is referenced 
+        prov:hadRole [
+            a prov:Role ; 
+            dct:type {} ;
+        ] ; 
+.
+
+<http://example.org/BioBank/instituteName>
+     a prov:Agent, schema:Organization ;
+     
+     schema:name {} ; 
+     schema:email {} ; 
+     schema:address {} ; 
+.
+
+
+#### ENTITIES ####
+# PROTOCOL ENTITY
+<http://example.org/SamplingProtocol/1> 
+     a prov:Entity, schema:CreativeWork, dwc:samplingProtocol ; #specify the latter in case of a sampling activity
+     
+     schema:name {protocol of sampling 1} ; 
+     schema:description {this is the description of the procotol used during sampling-1} ; 
+     schema:identifier {url of the protocol - should be same as subject} ; 
+     
+     #need definition of 'distribution', not 100% clear what it entails, some possibilities: 
+     schema:usageInfo {} ; 
+     schema:accessMode {} ; 
+     schema:accessibilitySummary {} ; 
+.
+
+<http://example.org/Protocol/1> 
+     a prov:Entity, schema:CreativeWork ; 
+     
+     schema:name {protocol 1} ; 
+     schema:description {this is the description of the procotol used during the transport activity ... } ; 
+     schema:identifier {url of the protocol - should be same as subject} ; 
+     
+     #not 100% clear what the definition of 'distribution' will be, but some possibilities: 
+     schema:usageInfo {} ; 
+     schema:accessMode {} ; 
+     schema:accessibilitySummary {} ; 
+.
+
+
+# INSTRUMENT ENTITY
+<http://example.org/Instrument/1>
+    a prov:Entity ;    
+    dct:type {type of instrument} ; 
+    dct:title {name of the instrument} ; 
+    
+    prov:wasInfluencedBy [
+        a prov:Entity ;
+        dct:title "Configuration/settings of the instrument during the Processing activity" ; 
+        dct:description {the description/listing of the configuration settings} ; 
+    ] ;  
+    prov:wasInfluencedBy <http://example.org/SoftWareProcessing/1> ; 
+.
+
+<http://example.org/StorageDevice/1>
+    a prov:Entity ; 
+    dct:type {type of instrument} ; 
+    dct:title {name of the instrument} ; 
+    
+    prov:wasInfluencedBy [
+        a prov:Entity ;
+        dct:title "Configuration/settings of the storage device during the Storage activity" ; 
+        dct:description {the description/listing of the configuration settings} ; 
+    ] ;   
+    prov:wasInfluencedBy <http://example.org/SoftWareProcessing/1> ; 
+.
+
+<http://example.org/Sampler/a>
+    a prov:Entity, sosa:Sampler ;     
+    dct:type {the type of sampler} ;
+    dct:title {name of the sampler} ; 
+    
+    prov:wasInfluencedBy [
+        a prov:Entity ;
+        dct:title "Configuration/settings of the Sampler during the Sampling activity" ; 
+        dct:description {the description/listing of the configuration settings} ; 
+    ] ; 
+    prov:wasInfluencedBy <http://example.org/SoftWareProcessing/1> ;
+    
+    #Case when instrument is hosted on a platform:
+    sosa:isHostedBy <http://example.org/Platform/A> ;
+. 
+
+
+# PLATFORM ENTITY
+<http://example.org/Platform/A> 
+    a prov:Entity, sosa:Platform ; 
+    dct:type {name of the platform} ; 
+.
+
+
+## SOFTWAREPROCESSING ENTITY
+<http://example.org/SoftWareProcessing/1>
+    a prov:Entity, schema:softwareApplication ; 
+    
+    schema:name {name of the software processing} ; 
+    schema:softwareVersion {version of the software processing} ; 
+    #depending on the definition of "endpoint"
+    schema:installUrl {endpoint url} ; 
+    schema:downloadUrl {endpoint url} ; 
+    schema:softwareRequirements {parameters} ; 
+    
+    #note schema:softwareApplication has some other properties that might be interesting. 
+.
+
+
+<http://example.org/SoftWareProcessing/2>
+    a prov:Entity, schema:softwareApplication ; 
+    
+    schema:name {name of the software processing} ; 
+    schema:softwareVersion {version of the software processing} ; 
+    #depending on the definition of "endpoint"
+    schema:installUrl {endpoint url} ; 
+    schema:downloadUrl {endpoint url} ; 
+    schema:softwareRequirements {parameters} ; 
+.
+
+
+------- still working on ---------
+# PERMIT ENTITY
+<http://example.org/Permit/1>
+    
+    ##MTA permit info
+    a prov:Entity, pproc:SuppliesContract ; 
+    
+    ##ABS permit info
+    a prov:Entity, pproc:SharedResultAgreementContract ; 
+
+    ##GENERAL permit info
+    schema:identifier {url of the permit | should be the same as the subject} ; 
+    schema:contentReferenceTime {datetime to indicate the validity of the permit} ; 
+    schema:dateCreated {datetime when the permit was issued} ;
+    
+    pproc:actualDuration {datetime to indicate the validity of the permit} ;
+    pproc:noticeDate {datetime when the permit was issued} ; 
+  
+    pproc:additionalDocumentReference {url of the permit itself} ; 
+.
+
+
